@@ -92,10 +92,10 @@ export default {
         changeLight: function() {
             let currentLight = colorEnum[this.color];
 
-            if (colorEnum[currentLight] === 'green') {
+            if (currentLight === colorEnum.green) {
                 this.direction = -1;
             }
-            if (colorEnum[currentLight] === 'red') {
+            if (currentLight === colorEnum.red) {
                 this.direction = 1;
             }
 
