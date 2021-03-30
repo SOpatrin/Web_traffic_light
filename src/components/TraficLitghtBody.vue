@@ -12,11 +12,13 @@
 <script>
 import TraficLightItem from './TraficLightItem.vue';
 
-const colorMap = {
+// Define color enum
+const colorEnum = {
     red: 0,
     yellow: 1,
     green: 2
 }
+// Define time in seconds for each color
 const colorTimes = {
     red: 10,
     yellow: 3,
@@ -43,6 +45,7 @@ export default {
     components: { 
         TraficLightItem 
     },
+    // Load data from storage
     mounted: function() {
         const storageTimer = sessionStorage.getItem('timer');
         const storageColor = sessionStorage.getItem('color');
@@ -52,6 +55,7 @@ export default {
             this.timer = Number(storageTimer);
         } else {
             this.timer = colorTimes[this.color];
+            // Set actual color in storage
             sessionStorage.setItem('color', this.color);
         }
 
@@ -59,14 +63,16 @@ export default {
             this.direction = Number(storageDirection);
         }
     },
+    // Set data in storage
     watch: {
         color: function() {
             this.timer = colorTimes[this.color];
             sessionStorage.setItem('color', this.color);
         },
+        // And some timer logic
         timer: function() {
             clearTimeout(this.timeout);
-            
+
             if (this.timer > 0) {
                 this.timeout = setTimeout(() => {
                     this.timer -= .100;
@@ -82,18 +88,19 @@ export default {
         }
     },
     methods: {
+        // Change current light and push into url
         changeLight: function() {
-            let currentLight = colorMap[this.color];
+            let currentLight = colorEnum[this.color];
 
-            if (currentLight === 2) {
+            if (colorEnum[currentLight] === 'green') {
                 this.direction = -1;
             }
-            if (currentLight === 0) {
+            if (colorEnum[currentLight] === 'red') {
                 this.direction = 1;
             }
 
             currentLight += this.direction;
-            this.$router.push('/' + Object.keys(colorMap)[currentLight]);
+            this.$router.push('/' + Object.keys(colorEnum)[currentLight]);
         }
     },
     beforeDestroy: function() {
