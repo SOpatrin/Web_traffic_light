@@ -44,22 +44,29 @@ export default {
         TraficLightItem 
     },
     mounted: function() {
-        if (localStorage.timer && (localStorage.color == this.color)) {
-            this.timer = Number(localStorage.timer);
+        const storageTimer = sessionStorage.getItem('timer');
+        const storageColor = sessionStorage.getItem('color');
+        const storageDirection = sessionStorage.getItem('direction');
+
+        if (storageTimer && (storageColor === this.color)) {
+            this.timer = Number(storageTimer);
         } else {
             this.timer = colorTimes[this.color];
+            sessionStorage.setItem('color', this.color);
         }
 
-        if (localStorage.direction) {
-            this.direction = Number(localStorage.direction);
+        if (storageDirection) {
+            this.direction = Number(storageDirection);
         }
     },
     watch: {
         color: function() {
             this.timer = colorTimes[this.color];
+            sessionStorage.setItem('color', this.color);
         },
         timer: function() {
             clearTimeout(this.timeout);
+            
             if (this.timer > 0) {
                 this.timeout = setTimeout(() => {
                     this.timer -= .100;
@@ -68,8 +75,10 @@ export default {
                 this.changeLight();
             }
             
-            localStorage.color = this.color;
-            localStorage.timer = this.timer;
+            sessionStorage.setItem('timer', this.timer);
+        },
+        direction: function() {
+            sessionStorage.setItem('direction', this.direction);
         }
     },
     methods: {
@@ -85,8 +94,6 @@ export default {
 
             currentLight += this.direction;
             this.$router.push('/' + Object.keys(colorMap)[currentLight]);
-
-            localStorage.direction = this.direction;
         }
     },
     beforeDestroy: function() {
