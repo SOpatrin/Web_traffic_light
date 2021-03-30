@@ -2,7 +2,7 @@
     <div>
         <div class="body">
             <TraficLightItem color="red" :on="color === 'red'" :blink="color === 'red' && timer < timerLowerBound" />
-            <TraficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound"  />
+            <TraficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound" />
             <TraficLightItem color="green" :on="color === 'green'" :blink="color === 'green' && timer < timerLowerBound" />
         </div>
         <h1 class="timer" :class="{pulse: timer < timerLowerBound}">{{ timer.toFixed(1) }}</h1>
@@ -28,7 +28,7 @@ export default {
     props: {
         color: {
             validator: function (value) {
-                return ['red', 'yellow', 'green'].indexOf(value) !== -1
+                return ['red', 'yellow', 'green'].indexOf(value) !== -1;
             },
             required: true
         }
@@ -51,13 +51,12 @@ export default {
         }
 
         if (localStorage.direction) {
-            this.direction = Number(localStorage.direction)
+            this.direction = Number(localStorage.direction);
         }
     },
     watch: {
         color: function() {
             this.timer = colorTimes[this.color];
-            localStorage.color = this.color;
         },
         timer: function() {
             clearTimeout(this.timeout);
@@ -68,12 +67,14 @@ export default {
             } else {
                 this.changeLight();
             }
-            localStorage.timer = this.timer
+            
+            localStorage.color = this.color;
+            localStorage.timer = this.timer;
         }
     },
     methods: {
         changeLight: function() {
-            let currentLight = colorMap[this.color]
+            let currentLight = colorMap[this.color];
 
             if (currentLight === 2) {
                 this.direction = -1;
@@ -85,7 +86,7 @@ export default {
             currentLight += this.direction;
             this.$router.push('/' + Object.keys(colorMap)[currentLight]);
 
-            localStorage.direction = this.direction
+            localStorage.direction = this.direction;
         }
     },
     beforeDestroy: function() {

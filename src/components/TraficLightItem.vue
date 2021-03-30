@@ -8,7 +8,7 @@ export default {
     props: {
         color: {
             validator: function (value) {
-                return ['red', 'yellow', 'green'].indexOf(value) !== -1
+                return ['red', 'yellow', 'green'].indexOf(value) !== -1;
             },
             required: true
         },
