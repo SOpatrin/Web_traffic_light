@@ -12,19 +12,6 @@
 <script>
 import TraficLightItem from './TraficLightItem.vue';
 
-// Define color enum
-const colorEnum = {
-    red: 0,
-    yellow: 1,
-    green: 2
-}
-// Define time in seconds for each color
-const colorTimes = {
-    red: 10,
-    yellow: 3,
-    green: 15
-}
-
 export default {
     name: 'TraficLightBody',
     props: {
@@ -36,17 +23,35 @@ export default {
         }
     },
     data: function() {
+        // Define color enum
+        const colorEnum = {
+            red: 0,
+            yellow: 1,
+            green: 2
+        }
+        Object.freeze(colorEnum);
+
+        // Define time in seconds for each color
+        const colorTimes = {
+            red: 10,
+            yellow: 3,
+            green: 15
+        }
+
         return {
             direction: 1,
             timer: 0,
-            timerLowerBound: 3
+            timerLowerBound: 3,
+            timerInterval: null,
+            colorEnum,
+            colorTimes
         }
     },
     components: { 
         TraficLightItem 
     },
-    // Load data from storage
     mounted: function() {
+        // Load data from storage
         const storageTimer = sessionStorage.getItem('timer');
         const storageColor = sessionStorage.getItem('color');
         const storageDirection = sessionStorage.getItem('direction');
@@ -54,7 +59,7 @@ export default {
         if (storageTimer && (storageColor === this.color)) {
             this.timer = Number(storageTimer);
         } else {
-            this.timer = colorTimes[this.color];
+            this.timer = this.colorTimes[this.color];
             // Set actual color in storage
             sessionStorage.setItem('color', this.color);
         }
@@ -62,22 +67,21 @@ export default {
         if (storageDirection) {
             this.direction = Number(storageDirection);
         }
+
+        // Set timer interval
+        this.timerInterval = setInterval(() => {
+            this.timer -= .100;
+        }, 100)
     },
     // Set data in storage
     watch: {
         color: function() {
-            this.timer = colorTimes[this.color];
+            this.timer = this.colorTimes[this.color];
             sessionStorage.setItem('color', this.color);
         },
         // And some timer logic
         timer: function() {
-            clearTimeout(this.timeout);
-
-            if (this.timer > 0) {
-                this.timeout = setTimeout(() => {
-                    this.timer -= .100;
-                }, 100)
-            } else {
+            if (this.timer <= 0) {
                 this.changeLight();
             }
             
@@ -90,21 +94,22 @@ export default {
     methods: {
         // Change current light and push into url
         changeLight: function() {
-            let currentLight = colorEnum[this.color];
+            let currentLight = this.colorEnum[this.color];
 
-            if (currentLight === colorEnum.green) {
+            if (currentLight === this.colorEnum.green) {
                 this.direction = -1;
             }
-            if (currentLight === colorEnum.red) {
+            if (currentLight === this.colorEnum.red) {
                 this.direction = 1;
             }
 
             currentLight += this.direction;
-            this.$router.push('/' + Object.keys(colorEnum)[currentLight]);
+            this.$router.push('/' + Object.keys(this.colorEnum)[currentLight]);
         }
     },
     beforeDestroy: function() {
-        clearTimeout(this.timeout);
+        // Clear timer interval
+        clearInterval(this.timerInterval);
     }
 }
 </script>
