@@ -1,13 +1,13 @@
-# traffic_light
-
-![traffic light](https://i.ibb.co/j60WWSv/traffic-Light.png)
-
+# Traffic light
+Demo of traffic light with controls.
+Created on Vue.js
+## Preview
+![traffic light](https://i.ibb.co/XxKTQBm/traffic-Light2.png)
 ## Project setup
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+## Project start on localhost
 ```
 npm run start
 ```
