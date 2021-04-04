@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name: 'TraficLightItem',
+    name: 'TrafficLightItem',
     props: {
         color: {
             validator: function (value) {

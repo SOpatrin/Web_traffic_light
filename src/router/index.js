@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import TraficLightBody from '../components/TraficLitghtBody'
+import TrafficLightBody from '../components/TrafficLitghtBody'
 
 Vue.use(VueRouter)
 
@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/:color',
-    component: TraficLightBody,
+    component: TrafficLightBody,
     props: true
   }
 ]

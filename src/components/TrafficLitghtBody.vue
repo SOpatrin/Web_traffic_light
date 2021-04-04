@@ -1,33 +1,33 @@
 <template>
     <div class="margin-items card glass">
-        <div class="trafic-light-container card glass">
+        <div class="traffic-light-container card glass">
             <div class="body">
-                <TraficLightItem color="red" :on="color === 'red'" :blink="color === 'red' && timer < timerLowerBound" />
-                <TraficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound" />
-                <TraficLightItem color="green" :on="color === 'green'" :blink="color === 'green' && timer < timerLowerBound" />
+                <TrafficLightItem color="red" :on="color === 'red'" :blink="color === 'red' && timer < timerLowerBound" />
+                <TrafficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound" />
+                <TrafficLightItem color="green" :on="color === 'green'" :blink="color === 'green' && timer < timerLowerBound" />
             </div>
-            <h1 class="timer" :class="{pulse: timer < timerLowerBound}">{{ timer.toFixed(1) }}</h1>
+            <h1 class="timer" :class="{pulse: timer < timerLowerBound}">{{ timer.toFixed(2) }}</h1>
         </div>
         <form action="" class="controls-container card glass">
             <fieldset>
                 <div class="row">
                     <label class="input-label">
                         Red duration
-                        <input type="range" name="red-time" v-model.number="colorTimes.red" min="0" max="30" />
+                        <input type="range" name="red-time" v-model.number="colorTimes.red" min="1" max="30" />
                     </label>
                     <output>{{ colorTimes.red + 's' }}</output>
                 </div>
                 <div class="row">
                     <label class="input-label">
                         Yellow duration
-                        <input type="range" name="yellow-time" v-model.number="colorTimes.yellow" min="0" max="30" />
+                        <input type="range" name="yellow-time" v-model.number="colorTimes.yellow" min="1" max="30" />
                     </label>
                     <output>{{ colorTimes.yellow + 's' }}</output>
                 </div>
                 <div class="row">
                     <label class="input-label">
                         Green duration
-                        <input type="range" name="green-time" v-model.number="colorTimes.green" min="0" max="30" />
+                        <input type="range" name="green-time" v-model.number="colorTimes.green" min="1" max="30" />
                     </label>
                     <output>{{ colorTimes.green + 's' }}</output>
                 </div>
@@ -38,16 +38,23 @@
                     </label>
                     <output>{{ timerLowerBound + 's' }}</output>
                 </div>
+                <div class="row">
+                    <label class="input-label">
+                        Tick rate
+                        <input type="range" name="tick-rate" v-model.number="tickRate" min="1" max="60" />
+                    </label>
+                    <output>{{ tickRate + 'hz' }}</output>
+                </div>
             </fieldset>
         </form>
     </div>
 </template>
 
 <script>
-import TraficLightItem from './TraficLightItem.vue';
+import TrafficLightItem from './TrafficLightItem.vue';
 
 export default {
-    name: 'TraficLightBody',
+    name: 'TrafficLightBody',
     props: {
         color: {
             validator: function (value) {
@@ -77,12 +84,14 @@ export default {
             timer: 0,
             timerLowerBound: 3,
             timerInterval: null,
+            lastUpdated: performance.now(),
+            tickRate: 10,
             colorEnum,
             colorTimes
         }
     },
     components: { 
-        TraficLightItem 
+        TrafficLightItem 
     },
     mounted: function() {
         // Load data from storage
@@ -102,10 +111,13 @@ export default {
             this.direction = Number(storageDirection);
         }
 
-        // Set timer interval
-        this.timerInterval = setInterval(() => {
-            this.timer -= .100;
-        }, 100)
+        Object.keys(this.colorTimes).forEach((key) => {
+            this.$watch('colorTimes.' + key, function() {
+                if (key === this.color) {
+                    this.timer = this.colorTimes[this.color];
+                }
+            });
+        })
     },
     // Set data in storage
     watch: {
@@ -123,6 +135,14 @@ export default {
         },
         direction: function() {
             sessionStorage.setItem('direction', this.direction);
+        },
+        tickRate: {
+            immediate: true,
+            handler: function() {
+                // Set timer interval
+                clearInterval(this.timerInterval);
+                this.timerInterval = setInterval(this.changeTimer, 1000 / this.tickRate);
+            }
         }
     },
     methods: {
@@ -139,6 +159,11 @@ export default {
 
             currentLight += this.direction;
             this.$router.push('/' + Object.keys(this.colorEnum)[currentLight]);
+        },
+        // Change timer value according current time
+        changeTimer: function() {
+            this.timer -= (performance.now() - this.lastUpdated) / 1000;
+            this.lastUpdated = performance.now();
         }
     },
     beforeDestroy: function() {
@@ -167,7 +192,7 @@ export default {
     margin: 20px;
 }
 
-.trafic-light-container, .controls-container {
+.traffic-light-container, .controls-container {
     width: 200px;
 }
 
