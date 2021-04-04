@@ -13,6 +13,10 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: rgb(129, 246, 248);
+}
+
 #app {
   font-family: Arial, sans-serif;
   color: #3a3a3a;

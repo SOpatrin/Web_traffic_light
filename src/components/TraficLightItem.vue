@@ -50,7 +50,7 @@ export default {
 }
 
 .red.on {
-    box-shadow: 0 0 15px red;
+    box-shadow: 0 0 25px red;
     border-color: red;
 }
 
@@ -59,7 +59,7 @@ export default {
 }
 
 .yellow.on {
-    box-shadow: 0 0 15px yellow;
+    box-shadow: 0 0 25px yellow;
     border-color: yellow;
 }
 
@@ -68,7 +68,7 @@ export default {
 }
 
 .green.on {
-    box-shadow: 0 0 15px limegreen;
+    box-shadow: 0 0 25px limegreen;
     border-color: limegreen;
 }
 

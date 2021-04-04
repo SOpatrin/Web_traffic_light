@@ -1,11 +1,45 @@
 <template>
-    <div>
-        <div class="body">
-            <TraficLightItem color="red" :on="color === 'red'" :blink="color === 'red' && timer < timerLowerBound" />
-            <TraficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound" />
-            <TraficLightItem color="green" :on="color === 'green'" :blink="color === 'green' && timer < timerLowerBound" />
+    <div class="margin-items card glass">
+        <div class="trafic-light-container card glass">
+            <div class="body">
+                <TraficLightItem color="red" :on="color === 'red'" :blink="color === 'red' && timer < timerLowerBound" />
+                <TraficLightItem color="yellow" :on="color === 'yellow'" :blink="color === 'yellow' && timer < timerLowerBound" />
+                <TraficLightItem color="green" :on="color === 'green'" :blink="color === 'green' && timer < timerLowerBound" />
+            </div>
+            <h1 class="timer" :class="{pulse: timer < timerLowerBound}">{{ timer.toFixed(1) }}</h1>
         </div>
-        <h1 class="timer" :class="{pulse: timer < timerLowerBound}">{{ timer.toFixed(1) }}</h1>
+        <form action="" class="controls-container card glass">
+            <fieldset>
+                <div class="row">
+                    <label class="input-label">
+                        Red duration
+                        <input type="range" name="red-time" v-model.number="colorTimes.red" min="0" max="30" />
+                    </label>
+                    <output>{{ colorTimes.red + 's' }}</output>
+                </div>
+                <div class="row">
+                    <label class="input-label">
+                        Yellow duration
+                        <input type="range" name="yellow-time" v-model.number="colorTimes.yellow" min="0" max="30" />
+                    </label>
+                    <output>{{ colorTimes.yellow + 's' }}</output>
+                </div>
+                <div class="row">
+                    <label class="input-label">
+                        Green duration
+                        <input type="range" name="green-time" v-model.number="colorTimes.green" min="0" max="30" />
+                    </label>
+                    <output>{{ colorTimes.green + 's' }}</output>
+                </div>
+                <div class="row">
+                    <label class="input-label">
+                        Countdown start
+                        <input type="range" name="timer-lower-bound" v-model.number="timerLowerBound" min="0" max="30" />
+                    </label>
+                    <output>{{ timerLowerBound + 's' }}</output>
+                </div>
+            </fieldset>
+        </form>
     </div>
 </template>
 
@@ -115,21 +149,65 @@ export default {
 </script>
 
 <style scoped>
+.glass {
+    background: white;
+    background: linear-gradient(to top left, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
+    border-radius: 20px;
+    box-shadow: 2px 2px rgba(255, 255, 255, 0.5);
+}
+
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.margin-items > * {
+    margin: 20px;
+}
+
+.trafic-light-container, .controls-container {
+    width: 200px;
+}
+
 .body {
     margin: auto;
     width: 50px;
     background-color: #333;
     padding: 25px;
-    border-radius: 7px;
+    border-radius: 20px;
     border: 2px solid #222;
+    box-shadow: 5px 5px #222;
 }
 
 .timer {
     width: 70%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 0;
     font-size: 3rem;
     text-align: center;
+}
+
+form fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.input-label {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
 }
 
 @keyframes pulse {
