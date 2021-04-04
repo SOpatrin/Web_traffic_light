@@ -198,7 +198,6 @@ export default {
 }
 
 .body {
-    margin: auto;
     width: 50px;
     background-color: #333;
     padding: 25px;
@@ -209,8 +208,6 @@ export default {
 
 .timer {
     width: 70%;
-    margin-left: auto;
-    margin-right: auto;
     margin-bottom: 0;
     font-size: 3rem;
     text-align: center;
