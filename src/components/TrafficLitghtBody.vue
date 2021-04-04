@@ -111,6 +111,7 @@ export default {
             this.direction = Number(storageDirection);
         }
 
+        // Add wathcers on nested object props
         Object.keys(this.colorTimes).forEach((key) => {
             this.$watch('colorTimes.' + key, function() {
                 if (key === this.color) {
