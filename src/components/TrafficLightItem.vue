@@ -33,7 +33,7 @@ export default {
     opacity: 0.2;
     border-color: #455A64;
 
-    transition-property: opacity box-shadow border-color;
+    transition-property: opacity, box-shadow, border-color;
     transition-duration: .2s;
 }
 
